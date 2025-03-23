@@ -7,7 +7,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import prisma from "@/app/libs/prismadb";
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
@@ -43,7 +43,10 @@ export const authOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return user;
+        return {
+          ...user,
+          id: user.id.toString(),
+        };
       },
     }),
   ],
@@ -54,6 +57,6 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions as AuthOptions);
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
